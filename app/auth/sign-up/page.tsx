@@ -19,7 +19,7 @@ import { PATHS } from "@/types";
 import { PrivacyFooter } from "@/components/privacy-footer";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { errorMessage } from "@/lib/utils";
+import { errorMessage, myApi } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -46,7 +46,7 @@ export default function SignUpPage() {
     e.preventDefault();
     try {
       startTransition(true);
-      await axios.post("/api/auth/sign-up/", {
+      await myApi.post("/auth/sign-up/", {
         ...form,
         country: "nigeria",
         ref: q.get("ref") || "",

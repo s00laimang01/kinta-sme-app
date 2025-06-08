@@ -7,7 +7,7 @@ import { Loader2, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Text from "./text";
-import { api } from "@/lib/utils";
+import { myApi } from "@/lib/utils";
 import { transaction, VerifyingPaymentProps } from "@/types";
 
 const VerifyingPayment: React.FC<VerifyingPaymentProps> = ({
@@ -26,7 +26,7 @@ const VerifyingPayment: React.FC<VerifyingPaymentProps> = ({
   const { data, isError, refetch } = useQuery({
     queryKey: ["paymentVerification", paymentId],
     queryFn: () =>
-      api.get<{ data: transaction }>(
+      myApi.get<{ data: transaction }>(
         `/transactions/get-transaction/?tx_ref=${paymentId}`
       ),
     retry: MAX_RETRY_COUNT,

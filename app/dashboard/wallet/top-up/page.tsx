@@ -14,15 +14,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import VerifyEmail from "@/components/verify-email";
 import VerifyingPayment from "@/components/verifying-payment";
 import { useNavBar } from "@/hooks/use-nav-bar";
-import { api, errorMessage, getDedicatedAccount } from "@/lib/utils";
-import {
-  createOneTimeVirtualAccountResponse,
-  dedicatedAccountNumber,
-  transaction,
-} from "@/types";
+import { myApi, errorMessage, getDedicatedAccount } from "@/lib/utils";
+import { createOneTimeVirtualAccountResponse, transaction } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Copy } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -34,7 +29,6 @@ const Page = () => {
 
   const r = useRouter();
   const q = useSearchParams();
-  const { data: session } = useSession();
   const [open, setOpen] = useState(true);
   const [virtualAccount, setVirtualAccount] =
     useState<createOneTimeVirtualAccountResponse>();
@@ -62,7 +56,7 @@ const Page = () => {
     if (stepCount === 3) {
       try {
         startTransition(true);
-        const res = await api.post<{
+        const res = await myApi.post<{
           data: createOneTimeVirtualAccountResponse;
         }>(`/account/bank/create-transaction-charge/`, {
           amount: data.amount,
@@ -76,9 +70,7 @@ const Page = () => {
 
         r.push(`?tx_ref=${res.data.data.tx_ref}`);
 
-        toast.success(
-          `Charge initiated successfully for - ${session?.user.name}`
-        );
+        toast.success(`Charge initiated successfully for - ${"s00laiman"}`);
 
         setOpen(true);
         setStep(3);
@@ -106,7 +98,7 @@ const Page = () => {
     queryKey: ["transaction", q.get("tx_ref")],
     queryFn: async () =>
       (
-        await api.get<{
+        await myApi.get<{
           data: transaction<{
             expirationTime: string;
             accountNumber: string;
@@ -287,14 +279,14 @@ const Page = () => {
                   <span className="text-primary text-4xl font-semibold">
                     {virtualAccount?.data.account_number}
                   </span>
-                  <button
+                  <div
                     onClick={() =>
                       copyAccountNumber(virtualAccount?.data.account_number)
                     }
                     className="ml-2"
                   >
                     <Copy className="h-5 w-5 text-slate-400" />
-                  </button>
+                  </div>
                 </div>
                 <p className="text-sm text-slate-700 font-medium mb-2">
                   {virtualAccount?.data.account_name}

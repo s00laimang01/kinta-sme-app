@@ -204,10 +204,6 @@ export const restrictPropertyModification = (
   }
 };
 
-export const api = axios.create({
-  baseURL: "/api/",
-});
-
 export const buyVtuApi = axios.create({
   baseURL: "https://buyvtu.online/api/v1",
 });
@@ -220,13 +216,13 @@ export interface apiResponse<T = any> {
 }
 
 export const getUser = async () => {
-  const res = await api.get<apiResponse<IUser>>("/users/me");
+  const res = await myApi.get<apiResponse<IUser>>("/users/me");
 
   return res.data.data;
 };
 
 export const getDedicatedAccount = async () => {
-  const res = await api.get<apiResponse<dedicatedAccountNumber>>(
+  const res = await myApi.get<apiResponse<dedicatedAccountNumber>>(
     "/account/me/"
   );
 
@@ -362,10 +358,10 @@ export const getTransactions = async (payload: {
   limit?: number;
 }) => {
   const q = queryString.stringify(payload);
-  const res = await api.get<{
+  const res = await myApi.get<{
     transactions: transaction[];
     pagination: { total: number; page: number; limit: number; pages: number };
-  }>(`/transactions/all/?${q}`);
+  }>(`/transactions/all?${q}`);
 
   return res.data;
 };
@@ -375,7 +371,7 @@ export const getRecentlyUsedContacts = async (
   limit = 4
 ) => {
   const q = queryString.stringify({ type, limit });
-  const res = await api.get<{
+  const res = await myApi.get<{
     data: recentlyUsedContact<{
       user: string;
       network: IBuyVtuNetworks;
@@ -383,7 +379,7 @@ export const getRecentlyUsedContacts = async (
       amount: number;
       recipients: string;
     }>[];
-  }>(`/users/me/recently-used/?${q}`);
+  }>(`/users/me/recently-used?${q}`);
 
   return res.data.data;
 };
@@ -698,8 +694,8 @@ export const _verifyMeterNumber = async (
     electricityId,
   });
 
-  const res = await api.get<apiResponse<IValidateMeterResponse>>(
-    `/create/electricity/verify-meter/?${q}`
+  const res = await myApi.get<apiResponse<IValidateMeterResponse>>(
+    `/create/electricity/verify-meter?${q}`
   );
 
   return res.data.data;
@@ -732,7 +728,7 @@ export const getTransactionsForAdmin = async (
     // Add search parameter if it exists
 
     // Call the server function with params and filters
-    const response = await api.get<{
+    const response = await myApi.get<{
       data: {
         transactions: transactionsWithUserDetails[];
         pagination: {
@@ -801,7 +797,7 @@ export const exportTransactions = async (params: transactionRequestProps) => {
     const filters: Record<string, any> = {};
 
     // Call the API to get the data for export with responseType: 'blob'
-    const response = await api.post(
+    const response = await myApi.post(
       "/admin/overview/transactions/export",
       { options: params, filters },
       { responseType: "blob" } // This is important for Axios to handle the response as a blob
@@ -846,7 +842,7 @@ export const exportTransactions = async (params: transactionRequestProps) => {
 
 export const getTransactionById = async (id: string) => {
   try {
-    const response = await api.get<{ data: transactionsWithUserDetails }>(
+    const response = await myApi.get<{ data: transactionsWithUserDetails }>(
       `/admin/overview/transactions/${id}`
     );
     return response.data;
@@ -861,10 +857,19 @@ export const updateSectionSettings = async (
   updates: Partial<appProps>
 ) => {
   try {
-    const res = await api.patch<{ data: appProps }>(
+    const res = await myApi.patch<{ data: appProps }>(
       `/admin/settings/${section}`,
       updates
     );
     return res.data;
   } catch (error) {}
 };
+
+export const myApi = axios.create({
+  baseURL: `https://kinta-sme-server.vercel.app/api`,
+  withCredentials: true,
+  withXSRFToken: true,
+  //headers: {
+  //  "Access-Control-Allow-Credentials": "true",
+  //},
+});

@@ -12,7 +12,7 @@ import TopUpCard from "@/components/top-up-card";
 import TransactionCard from "@/components/transaction-card";
 import { useAuthentication } from "@/hooks/use-authentication";
 import { useNavBar } from "@/hooks/use-nav-bar";
-import { api } from "@/lib/utils";
+import { myApi } from "@/lib/utils";
 import { transaction } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
@@ -24,7 +24,7 @@ const Page = () => {
 
   const { isLoading, data } = useQuery({
     queryKey: ["transactions", "last"],
-    queryFn: () => api.get<{ data: transaction }>(`/transactions/last/`),
+    queryFn: () => myApi.get<{ data: transaction }>(`/transactions/last`),
     refetchInterval: 1000 * 5,
   });
 

@@ -3,7 +3,6 @@
 import { type FC, type ReactNode, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Toaster } from "./ui/sonner";
-import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/stores/user.store";
 import { getUser } from "@/lib/utils";
@@ -11,11 +10,13 @@ import { Sidebar } from "./dashboard/sidebar";
 import { Header } from "./dashboard/header";
 import { usePathname } from "next/navigation";
 import { useMediaQuery, useWindowSize } from "@uidotdev/usehooks";
+import { useAuthentication } from "@/hooks/use-authentication";
 
 const DashboardProvider: FC<{ children: ReactNode; isMobile?: boolean }> = ({
   children,
 }) => {
-  const { status } = useSession();
+  const { isAuthenticated: status, isLoading: isAuthenticating } =
+    useAuthentication();
   const { setUser } = useUserStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
@@ -34,18 +35,18 @@ const DashboardProvider: FC<{ children: ReactNode; isMobile?: boolean }> = ({
   const { isLoading, data } = useQuery({
     queryKey: ["user", status],
     queryFn: () => getUser(),
-    enabled: status === "authenticated",
+    enabled: status,
   });
 
   // Set user data when available
   useEffect(() => {
-    if (data && status === "authenticated") {
+    if (data && status) {
       setUser(data);
     }
   }, [data, status]);
 
   // Show loading state while checking authentication or fetching data
-  if (status === "loading" || isLoading) {
+  if (isAuthenticating || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 size={50} className="animate-spin" />

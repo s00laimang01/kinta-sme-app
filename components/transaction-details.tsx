@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { api, cn } from "@/lib/utils";
+import { myApi, cn } from "@/lib/utils";
 import type {
   paymentMethod,
   transaction,
@@ -54,7 +54,7 @@ export function TransactionDetailsSheet({
     queryKey: ["transaction", tx_ref],
     queryFn: async () =>
       (
-        await api.get<{ data: transaction }>(
+        await myApi.get<{ data: transaction }>(
           `/transactions/get-transaction/?tx_ref=${tx_ref}&useExpirationDate=false`
         )
       ).data,
@@ -217,7 +217,7 @@ export function TransactionDetailsSheet({
                   >
                     <span className="flex items-center gap-1">
                       {getStatusIcon(transaction.status)}
-                      <span className="capitalize">{transaction.status}</span>
+                      <span className="cmyApitalize">{transaction.status}</span>
                     </span>
                   </Badge>
                 )}

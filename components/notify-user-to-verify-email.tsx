@@ -14,7 +14,7 @@ import { Mail } from "lucide-react";
 import Cookies from "js-cookie";
 import { useAuthentication } from "@/hooks/use-authentication";
 import VerifyEmail from "./verify-email";
-import { api, errorMessage } from "@/lib/utils";
+import { myApi, errorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function RemindUserToVerifyEmail() {
@@ -36,7 +36,7 @@ export default function RemindUserToVerifyEmail() {
 
   const sendVerificationCode = async () => {
     try {
-      await api.post(`users/me/verify-account/`, { type: "email" });
+      await myApi.post(`users/me/verify-account/`, { type: "email" });
 
       toast.success("Verification code sent successfully");
     } catch (error) {

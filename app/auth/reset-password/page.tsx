@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import axios from "axios";
 import { PATHS } from "@/types";
+import { myApi } from "@/lib/utils";
 
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
@@ -38,7 +38,7 @@ const ResetPasswordPage = () => {
     setIsLoading(true);
 
     try {
-      await axios.post("/api/auth/reset-password", { email, otp, newPassword });
+      await myApi.post("/auth/reset-password", { email, otp, newPassword });
 
       toast.success("Your password has been reset successfully");
 

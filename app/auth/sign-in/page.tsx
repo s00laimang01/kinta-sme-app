@@ -13,9 +13,9 @@ import Text from "@/components/text";
 import { PATHS } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { signIn } from "next-auth/react";
 import Cookies from "js-cookie";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { myApi } from "@/lib/utils";
 
 export default function Page() {
   const n = useRouter();
@@ -37,33 +37,23 @@ export default function Page() {
 
     try {
       startTransition(true);
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: auth.email,
-        password: auth.password,
-      });
+      await myApi.post(`/auth/login`, auth);
 
-      if (result?.error) {
-        toast.error(result.error);
-      } else {
-        const now = new Date();
-        now.setDate(now.getDate() + 30);
+      const now = new Date();
+      now.setDate(now.getDate() + 30);
 
-        if (auth.rememberLogins) {
-          Cookies.set("email", auth.email, { expires: now });
-          Cookies.set("password", auth.password, { expires: now });
-        }
-
-        n.push(PATHS.HOME);
-        n.refresh();
+      if (auth.rememberLogins) {
+        Cookies.set("email", auth.email, { expires: now });
+        Cookies.set("password", auth.password, { expires: now });
       }
+
+      n.push(PATHS.HOME);
+      n.refresh();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
       startTransition(false);
     }
-
-    n.push(PATHS.HOME);
   };
 
   useEffect(() => {

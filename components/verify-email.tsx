@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, Mail, RefreshCw } from "lucide-react";
-import { api, errorMessage } from "@/lib/utils";
+import { myApi, errorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { useAuthentication } from "@/hooks/use-authentication";
 
@@ -97,8 +97,8 @@ const VerifyEmail: FC<{
     setError(null);
 
     try {
-      // Simulate API call to verify OTP
-      await api.get(`/users/me/verify-account/?otp=${otp}`);
+      // Simulate myApi call to verify OTP
+      await myApi.get(`/users/me/verify-account/?otp=${otp}`);
 
       setIsVerified(true);
     } catch (error) {
@@ -114,8 +114,8 @@ const VerifyEmail: FC<{
     setError(null);
 
     try {
-      // Simulate API call to resend OTP
-      await api.post(`/users/me/verify-account/`, { type: "email" });
+      // Simulate myApi call to resend OTP
+      await myApi.post(`/users/me/verify-account/`, { type: "email" });
 
       toast.success("OTP resent successfully!");
 

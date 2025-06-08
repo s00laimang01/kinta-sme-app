@@ -1,6 +1,6 @@
 "use client";
 
-import { api, formatCurrency } from "@/lib/utils";
+import { myApi, formatCurrency } from "@/lib/utils";
 import type { ChartDataPoint } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -21,7 +21,7 @@ export function Overview() {
   } = useQuery({
     queryKey: ["overview"],
     queryFn: () =>
-      api.get<{ data: ChartDataPoint[] }>(`/admin/overview/chart/`),
+      myApi.get<{ data: ChartDataPoint[] }>(`/admin/overview/chart/`),
   });
 
   const { data: overviewData } = _data || {};

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useNavBar } from "@/hooks/use-nav-bar";
-import { api, cn, errorMessage, formatCurrency } from "@/lib/utils";
+import { myApi, cn, errorMessage, formatCurrency } from "@/lib/utils";
 import type { exam } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -20,7 +20,7 @@ const Page = () => {
   const { isLoading, data: exams = [] } = useQuery({
     queryKey: ["exams"],
     queryFn: async () =>
-      (await api.get<{ data: exam[] }>(`/create/exam/`)).data.data,
+      (await myApi.get<{ data: exam[] }>(`/create/exam/`)).data.data,
   });
 
   const [data, setData] = useState({
@@ -31,7 +31,7 @@ const Page = () => {
   const buyExam = async (pin: string) => {
     try {
       startTransition(true);
-      const res = await api.post<{ message: string }>(`/purchase/exam/`, {
+      const res = await myApi.post<{ message: string }>(`/purchase/exam/`, {
         pin,
         ...data,
       });

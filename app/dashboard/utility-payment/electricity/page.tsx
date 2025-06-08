@@ -37,7 +37,7 @@ import {
 } from "@/lib/constants";
 import {
   _verifyMeterNumber,
-  api,
+  myApi,
   cn,
   errorMessage,
   formatCurrency,
@@ -58,12 +58,10 @@ const SelectElectricityCompany: FC<{
   const { isLoading, data: electricity = [] } = useQuery({
     queryKey: ["electricity"],
     queryFn: async () =>
-      (await api.get<{ data: electricity[] }>(`/create/electricity/`)).data
+      (await myApi.get<{ data: electricity[] }>(`/create/electricity`)).data
         .data,
     enabled: isOpen,
   });
-
-  console.log(electricity);
 
   const content = (
     <div>
@@ -170,8 +168,8 @@ const Page = () => {
         byPassValidator: true,
       };
 
-      const res = await api.post<{ message: string }>(
-        `/purchase/electricity/`,
+      const res = await myApi.post<{ message: string }>(
+        `/purchase/electricity`,
         payload
       );
       toast(res.data.message);

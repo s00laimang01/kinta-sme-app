@@ -16,11 +16,11 @@ import {
   FREQUENTLY_PURCHASE_AIRTIME,
 } from "@/lib/constants";
 import {
-  api,
   errorMessage,
   formatCurrency,
   getNetworkLogo,
   getRecentlyUsedContacts,
+  myApi,
 } from "@/lib/utils";
 import type { AirtimeVendingResponse, IBuyVtuNetworks } from "@/types";
 import EnterPin from "@/components/enter-pin";
@@ -56,10 +56,10 @@ const Page = () => {
         return;
       }
 
-      const res = await api.post<{
+      const res = await myApi.post<{
         data: AirtimeVendingResponse;
         message: string;
-      }>(`/purchase/airtime/`, {
+      }>(`/purchase/airtime`, {
         pin,
         amount: amountToBuy,
         network: network[0].toUpperCase() + network.slice(1).toLowerCase(),

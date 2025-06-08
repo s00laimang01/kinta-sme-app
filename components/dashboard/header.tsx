@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthentication } from "@/hooks/use-authentication";
-import { api, errorMessage, getInitials } from "@/lib/utils";
+import { myApi, errorMessage, getInitials } from "@/lib/utils";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { PATHS } from "@/types";
@@ -28,7 +28,7 @@ export function Header({ onMenuButtonClick }: HeaderProps) {
   const refreshAccessToken = async () => {
     try {
       startTransaction(true);
-      await api.post(`/admin/overview/refresh-token/`);
+      await myApi.post(`/admin/overview/refresh-token/`);
       toast.success("Token refreshed successfully");
     } catch (err) {
       toast.error(errorMessage(err) || "Something went wrong");

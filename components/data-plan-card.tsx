@@ -14,7 +14,7 @@ import type { dataPlan, DataVendingResponse } from "@/types";
 import { toast } from "sonner";
 import EnterPin from "./enter-pin";
 import { Switch } from "./ui/switch";
-import { api, errorMessage } from "@/lib/utils";
+import { myApi, errorMessage } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
 
 export default function DataPlanCard({
@@ -40,10 +40,10 @@ export default function DataPlanCard({
         byPassValidator,
       };
 
-      const res = await api.post<{
+      const res = await myApi.post<{
         data: DataVendingResponse;
         message: string;
-      }>(`/purchase/data/`, payload);
+      }>(`/purchase/data`, payload);
 
       toast(res.data.message);
     } catch (error) {

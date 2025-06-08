@@ -1,6 +1,6 @@
 import { configs } from "@/lib/constants";
 import { PATHS } from "@/types";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 export default function Home() {
   const jsonLd = {
@@ -18,7 +18,7 @@ export default function Home() {
     },
   };
 
-  redirect(PATHS.HOME);
+  redirect(PATHS.SIGNIN, RedirectType.replace);
 
   return (
     <>

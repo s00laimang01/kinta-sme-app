@@ -1,4 +1,4 @@
-import { api } from "@/lib/utils";
+import { myApi } from "@/lib/utils";
 import { systemMessage } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ const SystemMessage = () => {
   const { data: systemMessage } = useQuery({
     queryKey: ["system-message"],
     queryFn: async () =>
-      (await api.get<{ data: systemMessage }>(`/users/message/`)).data.data,
+      (await myApi.get<{ data: systemMessage }>(`/users/message`)).data.data,
     refetchInterval: 60 * 100,
   });
 

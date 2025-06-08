@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useAuthentication } from "@/hooks/use-authentication";
 import { useNavBar } from "@/hooks/use-nav-bar";
-import type { apiResponse } from "@/lib/utils";
+import { myApi, type apiResponse } from "@/lib/utils";
 import type { IReferralResponse } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -25,12 +25,12 @@ const Page = () => {
     queryKey: ["referrals"],
     queryFn: async () =>
       (
-        await axios.get<
+        await myApi.get<
           apiResponse<{
             referrals: IReferralResponse[];
             totalReferrals: number;
           }>
-        >(`/api/users/referrals/`)
+        >(`/users/referrals/`)
       ).data.data,
   });
 

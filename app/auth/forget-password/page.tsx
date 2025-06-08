@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { api, errorMessage } from "@/lib/utils";
+import { errorMessage, myApi } from "@/lib/utils";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ const ForgotPasswordPage = () => {
     setIsLoading(true);
 
     try {
-      await api.post("/auth/forget-password", { email });
+      await myApi.post("/auth/forget-password", { email });
 
       toast.success(
         "If your email exists in our system, you will receive a reset code shortly"

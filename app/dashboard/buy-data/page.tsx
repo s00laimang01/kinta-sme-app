@@ -18,7 +18,7 @@ import { useNavBar } from "@/hooks/use-nav-bar";
 import { AVIALABLE_NETWORKS, PLAN_TYPES } from "@/lib/constants";
 import type { availableNetworks, dataPlan } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { api, getRecentlyUsedContacts } from "@/lib/utils";
+import { myApi, getRecentlyUsedContacts } from "@/lib/utils";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import Text from "@/components/text";
 
@@ -31,7 +31,7 @@ const Page = () => {
 
   const { isLoading, data } = useQuery({
     queryKey: ["data-plans"],
-    queryFn: () => api.get<{ data: dataPlan[] }>(`/create/data-plan/`),
+    queryFn: () => myApi.get<{ data: dataPlan[] }>(`/create/data-plan`),
   });
 
   const { isLoading: _isLoading, data: recentlyUsed } = useQuery({
@@ -129,16 +129,16 @@ const Page = () => {
                 setNetwork(value);
               }}
             >
-              <SelectTrigger className="md:w-[180px] w-full rounded-none capitalize">
+              <SelectTrigger className="md:w-[180px] w-full rounded-none cmyApitalize">
                 <SelectValue
                   placeholder="Select Network"
-                  className="capitalize"
+                  className="cmyApitalize"
                 />
               </SelectTrigger>
               <SelectContent className="rounded-none">
                 <SelectItem value="all">All Networks</SelectItem>
                 {AVIALABLE_NETWORKS.map((type) => (
-                  <SelectItem key={type} value={type} className="capitalize">
+                  <SelectItem key={type} value={type} className="cmyApitalize">
                     {type}
                   </SelectItem>
                 ))}
@@ -151,10 +151,10 @@ const Page = () => {
                 setPlanType(value);
               }}
             >
-              <SelectTrigger className="md:w-[180px] w-full rounded-none capitalize">
+              <SelectTrigger className="md:w-[180px] w-full rounded-none cmyApitalize">
                 <SelectValue
                   placeholder="Select Data Type"
-                  className="capitalize"
+                  className="cmyApitalize"
                 />
               </SelectTrigger>
               <SelectContent className="rounded-none">

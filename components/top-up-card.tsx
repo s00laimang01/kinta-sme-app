@@ -1,21 +1,31 @@
 import React from "react";
 import { Card, CardContent, CardTitle } from "./ui/card";
 import Text from "./text";
-import { api, errorMessage, getDedicatedAccount } from "@/lib/utils";
+import {
+  myApi,
+  errorMessage,
+  getDedicatedAccount,
+  apiResponse,
+} from "@/lib/utils";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import VerifyEmail from "./verify-email";
-import { useSession } from "next-auth/react";
 import { Skeleton } from "./ui/skeleton";
+import { useAuthentication } from "@/hooks/use-authentication";
+import { dedicatedAccountNumber } from "@/types";
 
 const TopUpCard = () => {
-  const { data: session } = useSession();
+  const { user } = useAuthentication();
+
+  console.log({ user });
 
   const { isLoading, data: __data } = useQuery({
     queryKey: ["get-dedicated-account"],
-    queryFn: getDedicatedAccount,
-    refetchInterval: 5000,
+    queryFn: async () =>
+      (await myApi.get<apiResponse<dedicatedAccountNumber>>("/account/me"))
+        .data,
+    //refetchInterval: 5000,
   });
 
   const { data: account } = __data || {};
@@ -31,7 +41,7 @@ const TopUpCard = () => {
 
   const sendVerificationCode = async () => {
     try {
-      await api.post(`users/me/verify-account/`, { type: "email" });
+      await myApi.post(`/users/me/verify-account/`, { type: "email" });
 
       toast.success("Verification code sent successfully");
     } catch (error) {
@@ -64,7 +74,7 @@ const TopUpCard = () => {
               Copy
             </Button>
           ) : (
-            <VerifyEmail email={session?.user.email!}>
+            <VerifyEmail email={user?.auth?.email!}>
               <Button
                 onClick={sendVerificationCode}
                 className="rounded-sm bg-white/20 hover:bg-white/30"

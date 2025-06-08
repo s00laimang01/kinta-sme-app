@@ -26,7 +26,7 @@ import {
 import { CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
 import { useAuthentication } from "@/hooks/use-authentication";
 import VerifyEmail from "./verify-email";
-import { api, errorMessage } from "@/lib/utils";
+import { myApi, errorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -125,8 +125,8 @@ export default function CreateDedicatedAccount({
           return;
         }
 
-        // API call to securely store/transmit BVN
-        await api.post("/users/me/verify-account/bvn/", {
+        // myApi call to securely store/transmit BVN
+        await myApi.post("/users/me/verify-account/bvn/", {
           bvn: data.bvn,
         });
 
@@ -158,7 +158,7 @@ export default function CreateDedicatedAccount({
 
   const sendVerificationCode = async () => {
     try {
-      await api.post(`users/me/verify-account/`, { type: "email" });
+      await myApi.post(`users/me/verify-account/`, { type: "email" });
 
       toast.success("Verification code sent successfully");
     } catch (error) {

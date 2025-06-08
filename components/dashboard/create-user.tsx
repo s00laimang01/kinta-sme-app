@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { api, errorMessage } from "@/lib/utils";
+import { myApi, errorMessage } from "@/lib/utils";
 
 type NewUserData = {
   fullName: string;
@@ -40,7 +40,7 @@ export function AddUserDialog({ children }: { children: ReactNode }) {
 
   const createUserMutation = useMutation({
     mutationFn: async (userData: NewUserData) => {
-      const response = await api.post("/auth/sign-up/", formData);
+      const response = await myApi.post("/auth/sign-up/", formData);
 
       return response.data;
     },

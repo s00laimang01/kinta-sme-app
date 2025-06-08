@@ -37,7 +37,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { formSchema } from "@/lib/validator.schema";
 import { ScrollArea } from "../scroll-area";
-import { api } from "@/lib/utils";
+import { myApi } from "@/lib/utils";
 import { dataPlan } from "@/types";
 
 type FormValues = z.infer<typeof formSchema>;
@@ -77,11 +77,11 @@ export function CreateDataPlanDialog({
     setIsSubmitting(true);
     try {
       if (dataPlan) {
-        await api.patch("/admin/data/", { _id: dataPlan._id, ...values });
+        await myApi.patch("/admin/data/", { _id: dataPlan._id, ...values });
 
         toast("Data plan updated successfully");
       } else {
-        await api.post("/admin/data", values);
+        await myApi.post("/admin/data", values);
 
         // Show success message
         toast("Data plan created successfully");

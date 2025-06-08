@@ -23,7 +23,7 @@ import {
 import { ArrowLeft, ShieldCheck, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { api, errorMessage } from "@/lib/utils";
+import { myApi, errorMessage } from "@/lib/utils";
 
 interface CreateOrUpdatePinProps {
   children: ReactNode;
@@ -69,7 +69,7 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
 
   const createTransactionPin = async (pin: string) => {
     try {
-      const res = await api.post<{ message: string }>(`/auth/pin/`, {
+      const res = await myApi.post<{ message: string }>(`/auth/pin/`, {
         pin,
         confirmPin,
       });
@@ -82,7 +82,7 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
 
   const changeTransactionPin = async () => {
     try {
-      const res = await api.patch<{ message: string }>(`/auth/pin/update/`, {
+      const res = await myApi.patch<{ message: string }>(`/auth/pin/update/`, {
         newPin,
         oldPin: currentPin,
         confirmPin,

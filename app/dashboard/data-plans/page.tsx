@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useNavBar } from "@/hooks/use-nav-bar";
-import { api } from "@/lib/utils";
+import { myApi } from "@/lib/utils";
 import { dataPlan } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Calculator } from "lucide-react";
@@ -23,7 +23,7 @@ const Page = () => {
 
   const { isLoading, data } = useQuery({
     queryKey: ["data-plans"],
-    queryFn: () => api.get<{ data: dataPlan[] }>(`/create/data-plan/`),
+    queryFn: () => myApi.get<{ data: dataPlan[] }>(`/create/data-plan/`),
   });
 
   const { data: _data } = data || {};
