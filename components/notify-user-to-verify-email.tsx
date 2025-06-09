@@ -36,7 +36,7 @@ export default function RemindUserToVerifyEmail() {
 
   const sendVerificationCode = async () => {
     try {
-      await myApi.post(`users/me/verify-account/`, { type: "email" });
+      await myApi.post(`users/me/verify-account`, { type: "email" });
 
       toast.success("Verification code sent successfully");
     } catch (error) {
