@@ -1,69 +1,21 @@
-import type { Metadata } from "next";
+"use client";
+
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { configs } from "@/lib/constants";
-
-export const metadata: Metadata = {
-  title: `${configs.appName} - Buy Data, Airtime & Pay Bills`,
-  description:
-    "Buy data bundles, airtime, pay electricity bills and check exam results at the best prices. Fast delivery and 24/7 customer support.",
-  applicationName: configs.appName,
-  keywords:
-    "data bundles, airtime topup, electricity bills, exam results, MTN data, Airtel data, Glo data, 9mobile data, utility payments, cheap data, bulk data, data subscription, airtime recharge, bill payments, WAEC result checker, NECO result checker, JAMB result checker, prepaid meter, postpaid meter, EKEDC, IKEDC, AEDC, PHEDC, mobile data, internet data plans, VTU services, utility bill payments, online recharge, data reseller, SME data plans, corporate data plans, instant recharge, automated payments, digital wallet, mobile wallet, online transactions, secure payments",
-  authors: [
-    { name: "KINTA SME", url: "https://abanty-data-sme-amber.vercel.app" },
-  ],
-  creator: "KINTA SME",
-  publisher: "KINTA SME",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL("https://abanty-data-sme-amber.vercel.app"),
-  openGraph: {
-    title: `${configs.appName} - Buy Data, Airtime & Pay Bills`,
-    description:
-      "Buy data bundles, airtime, pay electricity bills and check exam results at the best prices. Fast delivery and 24/7 customer support.",
-    url: "https://abanty-data-sme-amber.vercel.app",
-    siteName: configs.appName,
-    images: ["/og-image.jpg"],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${configs.appName} - Buy Data, Airtime & Pay Bills`,
-    description:
-      "Buy data bundles, airtime, pay electricity bills and check exam results at the best prices. Fast delivery and 24/7 customer support.",
-    images: ["/og-image.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "google-site-verification-code",
-  },
-};
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const qc = new QueryClient();
+
   return (
     <html lang="en">
       <body className={`antialiased`}>
         <Toaster position="top-center" richColors />
-        {children}
+        <QueryClientProvider client={qc}>{children}</QueryClientProvider>
       </body>
     </html>
   );
