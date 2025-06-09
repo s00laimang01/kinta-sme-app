@@ -37,7 +37,14 @@ export default function Page() {
 
     try {
       startTransition(true);
-      await myApi.post(`/auth/login`, auth);
+      const res = await myApi.post<{ data: { token: string } }>(
+        `/auth/login`,
+        auth
+      );
+
+      console.log(res.data);
+
+      Cookies.set("token", res.data.data.token, { expires: 30 });
 
       const now = new Date();
       now.setDate(now.getDate() + 30);

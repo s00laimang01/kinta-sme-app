@@ -32,6 +32,7 @@ import { configs } from "./constants";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 import queryString from "query-string";
+import Cookies from "js-cookie";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -869,6 +870,9 @@ export const myApi = axios.create({
   baseURL: `https://kinta-sme-server.vercel.app/api`,
   withCredentials: true,
   withXSRFToken: true,
+  headers: {
+    Authorization: Cookies.get("token"),
+  },
   //headers: {
   //  "Access-Control-Allow-Credentials": "true",
   //},

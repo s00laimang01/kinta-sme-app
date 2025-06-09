@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: "out",
   server: {
     allowNavigation: ["kinta-sme-server.vercel.app"], // Remove https://
-    url: "http://localhost:3000", // Keep for live reload
+    url: "https://kinta-sme-app.vercel.app", // Keep for live reload
     //cleartext: true,
   },
 };
