@@ -16,12 +16,14 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { myApi } from "@/lib/utils";
+import { useAuthentication } from "@/hooks/use-authentication";
 
 export default function Page() {
   const n = useRouter();
   const q = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useState(false);
+  const { isAuthenticated } = useAuthentication();
   const [auth, setAuth] = useState({
     email: "",
     password: "",
@@ -62,6 +64,12 @@ export default function Page() {
       startTransition(false);
     }
   };
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    n.push(PATHS.HOME);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const email = q.get("email") || Cookies.get("email") || "";
