@@ -66,17 +66,17 @@ export default function Page() {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    const isAuthenticated = Cookies.get("token");
 
-    n.push(PATHS.HOME);
-  }, [isAuthenticated]);
-
-  useEffect(() => {
     const email = q.get("email") || Cookies.get("email") || "";
     const password = Cookies.get("password") || "";
 
     if (email || password) {
       setAuth({ ...auth, email, password, rememberLogins: true });
+    }
+
+    if (!!isAuthenticated) {
+      n.push(PATHS.HOME);
     }
   }, []);
 

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">data-sme</string>
-    <string name="title_activity_main">data-sme</string>
+    <string name="app_name">Kinta SME</string>
+    <string name="title_activity_main">Kinta SME</string>
     <string name="package_name">com.example.app</string>
     <string name="custom_url_scheme">com.example.app</string>
 </resources>
