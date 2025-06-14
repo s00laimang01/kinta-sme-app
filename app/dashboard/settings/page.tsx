@@ -133,11 +133,6 @@ const Page = () => {
       await myApi.patch("/users/me/reset-password", auth);
 
       toast.success("Password changed successfully");
-
-      await signOut({
-        redirect: true,
-        callbackUrl: `${PATHS.SIGNIN}?message=Please sign in with your new password`,
-      });
     } catch (error) {
       toast.error(errorMessage(error).message);
     } finally {
