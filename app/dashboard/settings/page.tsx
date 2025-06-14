@@ -35,7 +35,7 @@ const ChangeEmailAddress: FC<{ children: ReactNode }> = ({ children }) => {
 
     try {
       startTransition(true);
-      await myApi.patch("/users/me/", { "auth.email": email });
+      await myApi.patch("/users/me", { "auth.email": email });
 
       // Logout the user to login with new email.
       await signOut({
@@ -117,7 +117,7 @@ const Page = () => {
   const updateUserData = async () => {
     try {
       startTransition(true);
-      await myApi.patch("/users/me/", _user);
+      await myApi.patch("/users/me", _user);
       queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       toast.success("User data updated successfully");
     } catch (error) {
@@ -130,7 +130,7 @@ const Page = () => {
   const changeAccountPassword = async () => {
     try {
       startTransition(true);
-      await myApi.patch("/users/me/reset-password/", auth);
+      await myApi.patch("/users/me/reset-password", auth);
 
       toast.success("Password changed successfully");
 
@@ -148,7 +148,7 @@ const Page = () => {
   const deleteAccount = async () => {
     try {
       startTransition(true);
-      await myApi.delete("/users/me/delete/");
+      await myApi.delete("/users/me/delete");
       toast.success("Account deleted successfully");
 
       await signOut({
@@ -164,7 +164,7 @@ const Page = () => {
 
   const createTransactionPin = async (pin: string) => {
     try {
-      const res = await myApi.post<{ message: string }>(`/auth/create/pin/`, {
+      const res = await myApi.post<{ message: string }>(`/auth/create/pin`, {
         pin,
         confirmPin: pin,
       });
