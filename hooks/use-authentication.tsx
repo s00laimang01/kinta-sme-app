@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/lib/utils";
 
-export const useAuthentication = (key?: any, retry: number = 5000) => {
+export const useAuthentication = (key?: any, retry?: number) => {
   //
 
   const {
