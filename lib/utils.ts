@@ -868,12 +868,7 @@ export const updateSectionSettings = async (
 
 export const myApi = axios.create({
   baseURL: `https://kinta-sme-server.vercel.app/api`,
-  withCredentials: true,
-  withXSRFToken: true,
   headers: {
     Authorization: Cookies.get("token"),
   },
-  //headers: {
-  //  "Access-Control-Allow-Credentials": "true",
-  //},
 });

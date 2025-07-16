@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/lib/utils";
+import Cookies from "js-cookie";
 
 export const useAuthentication = (key?: any, retry?: number) => {
   //
+
+  console.log({ cookies: Cookies.get("token") });
 
   const {
     isLoading,
@@ -14,6 +17,8 @@ export const useAuthentication = (key?: any, retry?: number) => {
     queryFn: () => getUser(),
     refetchInterval: retry,
   });
+
+  console.log({ user });
 
   return {
     isLoading,

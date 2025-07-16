@@ -22,7 +22,7 @@ const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
-    isAuthenticated: status,
+    isAuthenticated,
     isLoading: isAuthenticating,
     user,
   } = useAuthentication("user");
@@ -40,10 +40,10 @@ const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // Set user data when available
   useEffect(() => {
-    if (user && status) {
-      setUser(user);
+    if (isAuthenticated) {
+      setUser(user!);
     }
-  }, [user, status]);
+  }, [isAuthenticated]);
 
   // Show loading state while checking authentication or fetching data
   if (isAuthenticating) {

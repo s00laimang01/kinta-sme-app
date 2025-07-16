@@ -23,7 +23,6 @@ export default function Page() {
   const q = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useState(false);
-  const { isAuthenticated } = useAuthentication();
   const [auth, setAuth] = useState({
     email: "",
     password: "",
@@ -43,8 +42,6 @@ export default function Page() {
         `/auth/login`,
         auth
       );
-
-      console.log(res.data);
 
       Cookies.set("token", res.data.data.token, { expires: 30 });
 
