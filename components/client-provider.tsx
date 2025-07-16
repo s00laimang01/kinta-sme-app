@@ -13,38 +13,40 @@ import { Button } from "./ui/button";
 import { Loader2, MenuIcon } from "lucide-react";
 import { useDashboard } from "@/stores/dashboard.store";
 import { Toaster } from "./ui/sonner";
-import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/stores/user.store";
-import { getUser, sendWhatsAppMessage } from "@/lib/utils";
+import { sendWhatsAppMessage } from "@/lib/utils";
 import Image from "next/image";
 import { useAuthentication } from "@/hooks/use-authentication";
 
 const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { isAuthenticated: status, isLoading: isAuthenticating } =
-    useAuthentication();
+  const {
+    isAuthenticated: status,
+    isLoading: isAuthenticating,
+    user,
+  } = useAuthentication("user");
   const { setUser } = useUserStore();
 
-  // Use React Query to fetch user data
-  const { isLoading, data } = useQuery({
-    queryKey: ["user", status],
-    queryFn: () => getUser(),
-    enabled: status,
-  });
+  //// Use React Query to fetch user data
+  //const { isLoading, data } = useQuery({
+  //  queryKey: ["user", status],
+  //  queryFn: () => getUser(),
+  //  enabled: status,
+  //});
 
-  const { title = data?.fullName?.split(" ")?.[0] || "Dashboard" } =
+  const { title = user?.fullName?.split(" ")?.[0] || "Dashboard" } =
     useDashboard();
 
   // Set user data when available
   useEffect(() => {
-    if (data && status) {
-      setUser(data);
+    if (user && status) {
+      setUser(user);
     }
-  }, [data, status]);
+  }, [user, status]);
 
   // Show loading state while checking authentication or fetching data
-  if (isLoading || isAuthenticating) {
+  if (isAuthenticating) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 size={50} className="animate-spin" />

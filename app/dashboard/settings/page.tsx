@@ -38,12 +38,6 @@ const ChangeEmailAddress: FC<{ children: ReactNode }> = ({ children }) => {
       await myApi.patch("/users/me", { "auth.email": email });
 
       // Logout the user to login with new email.
-      await signOut({
-        redirect: true,
-        callbackUrl: `${PATHS.SIGNIN}?email=${encodeURIComponent(
-          email
-        )}&message=Please sign in with your new email`,
-      });
 
       toast.success("Email address changed successfully");
     } catch (error) {
