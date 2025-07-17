@@ -16,7 +16,6 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { myApi } from "@/lib/utils";
-import { useAuthentication } from "@/hooks/use-authentication";
 
 export default function Page() {
   const n = useRouter();

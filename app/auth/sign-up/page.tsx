@@ -12,16 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import axios from "axios";
 import { AuthHeader } from "@/components/auth-header";
 import Text from "@/components/text";
 import { PATHS } from "@/types";
 import { PrivacyFooter } from "@/components/privacy-footer";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { errorMessage, myApi } from "@/lib/utils";
-import { signIn } from "next-auth/react";
+import { apiResponse, errorMessage, myApi } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function SignUpPage() {
   const r = useRouter();
@@ -44,25 +43,44 @@ export default function SignUpPage() {
 
   const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const _toast = toast.loading("Attempting to create an account for you");
+
     try {
       startTransition(true);
-      await myApi.post("/auth/sign-up/", {
-        ...form,
-        country: "nigeria",
-        ref: q.get("ref") || "",
-      });
+      const res = await myApi.post<apiResponse<{ email: string }>>(
+        "/auth/sign-up",
+        {
+          ...form,
+          country: "nigeria",
+          ref: q.get("ref") || "",
+        }
+      );
+
+      toast.dismiss(_toast);
 
       toast.success("Account created successfully!");
 
-      await signIn("credentials", {
-        email: form.email,
-        password: form.password,
-        redirect: false,
-      });
+      const __toast = toast.loading("Trying to authenticate you");
 
-      r.push(PATHS.HOME);
+      try {
+        const { data } = await myApi.post<apiResponse<{ token: string }>>(
+          "/auth/login",
+          {
+            email: form.email,
+            password: form.password,
+          }
+        );
+
+        Cookies.set("token", data?.data?.token);
+        r.push(PATHS.HOME);
+      } catch (error) {
+        toast.error("Authentication failed, please sign in manually");
+        toast.dismiss(__toast);
+        r.push(PATHS.SIGNIN);
+      }
     } catch (error) {
-      toast.error(errorMessage(error).message);
+      toast.error(errorMessage(error).message || "Something went wrong..");
     } finally {
       startTransition(false);
     }

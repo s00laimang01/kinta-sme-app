@@ -143,9 +143,9 @@ export function Sidebar({
             icon={<LogOut size={18} />}
             label="Logout"
             isActive={isPathMathching("")}
-            onClick={async () => {
+            onClick={() => {
               Cookies.remove("token");
-              window.location.replace(PATHS.SIGNIN);
+              window.location.href = PATHS.SIGNIN;
             }}
           />
         </ul>
