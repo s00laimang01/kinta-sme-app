@@ -17,39 +17,64 @@ import { useUserStore } from "@/stores/user.store";
 import { sendWhatsAppMessage } from "@/lib/utils";
 import Image from "next/image";
 import { useAuthentication } from "@/hooks/use-authentication";
+import { useRouter } from "next/navigation";
+import { PATHS } from "@/types";
+import Cookies from "js-cookie";
 
 const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const r = useRouter();
 
   const {
-    isAuthenticated,
     isLoading: isAuthenticating,
     user,
+    isFirstRender,
+    ...auth
   } = useAuthentication("user");
   const { setUser } = useUserStore();
-
-  //// Use React Query to fetch user data
-  //const { isLoading, data } = useQuery({
-  //  queryKey: ["user", status],
-  //  queryFn: () => getUser(),
-  //  enabled: status,
-  //});
 
   const { title = user?.fullName?.split(" ")?.[0] || "Dashboard" } =
     useDashboard();
 
   // Set user data when available
   useEffect(() => {
-    if (isAuthenticated) {
+    if (user) {
       setUser(user!);
     }
-  }, [isAuthenticated]);
+  }, [user, auth.isAuthenticated]);
 
   // Show loading state while checking authentication or fetching data
   if (isAuthenticating) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 size={50} className="animate-spin" />
+      </div>
+    );
+  }
+
+  if (!auth.isAuthenticated) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+          <h2 className="text-xl font-semibold mb-4">
+            Authentication Required
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Please sign in to access this page. You will be redirected to the
+            login page.
+          </p>
+          <div className="flex justify-end">
+            <Button
+              onClick={() => {
+                Cookies.remove("token");
+                r.push(PATHS.SIGNIN);
+              }}
+              className="bg-primary text-white"
+            >
+              Go to Login
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }

@@ -15,7 +15,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { myApi } from "@/lib/utils";
+import { errorMessage, myApi } from "@/lib/utils";
 
 export default function Page() {
   const n = useRouter();
@@ -32,7 +32,7 @@ export default function Page() {
     setAuth({ ...auth, [e.target.name]: e?.target.value });
   };
 
-  const _signIn = async (e: React.FormEvent<HTMLFormElement>) => {
+  const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -42,20 +42,19 @@ export default function Page() {
         auth
       );
 
-      Cookies.set("token", res.data.data.token, { expires: 30 });
-
       const now = new Date();
       now.setDate(now.getDate() + 30);
+
+      Cookies.set("token", res.data.data.token, { expires: now });
 
       if (auth.rememberLogins) {
         Cookies.set("email", auth.email, { expires: now });
         Cookies.set("password", auth.password, { expires: now });
       }
 
-      n.push(PATHS.HOME);
-      n.refresh();
+      window.location.href = PATHS.HOME;
     } catch (error) {
-      toast.error((error as Error).message);
+      toast.error(errorMessage(error).message || "Something went wrong..");
     } finally {
       startTransition(false);
     }
@@ -72,7 +71,7 @@ export default function Page() {
     }
 
     if (!!isAuthenticated) {
-      n.push(PATHS.HOME);
+      n.replace(PATHS.HOME);
     }
   }, []);
 
@@ -104,7 +103,7 @@ export default function Page() {
           </Alert>
         )}
 
-        <form onSubmit={_signIn} className="space-y-6">
+        <form onSubmit={signIn} className="space-y-6">
           <div className="space-y-1">
             <div className="flex items-center justify-between">
               <Label htmlFor="email" className="text-xs">

@@ -44,24 +44,15 @@ export default function SignUpPage() {
   const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const _toast = toast.loading("Attempting to create an account for you");
-
     try {
       startTransition(true);
-      const res = await myApi.post<apiResponse<{ email: string }>>(
-        "/auth/sign-up",
-        {
-          ...form,
-          country: "nigeria",
-          ref: q.get("ref") || "",
-        }
-      );
-
-      toast.dismiss(_toast);
+      await myApi.post<apiResponse<{ email: string }>>("/auth/sign-up", {
+        ...form,
+        country: "nigeria",
+        ref: q.get("ref") || "",
+      });
 
       toast.success("Account created successfully!");
-
-      const __toast = toast.loading("Trying to authenticate you");
 
       try {
         const { data } = await myApi.post<apiResponse<{ token: string }>>(
@@ -75,8 +66,6 @@ export default function SignUpPage() {
         Cookies.set("token", data?.data?.token);
         r.push(PATHS.HOME);
       } catch (error) {
-        toast.error("Authentication failed, please sign in manually");
-        toast.dismiss(__toast);
         r.push(PATHS.SIGNIN);
       }
     } catch (error) {

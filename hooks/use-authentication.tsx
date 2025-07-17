@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/lib/utils";
-import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 export const useAuthentication = (key?: any, retry?: number) => {
-  //
-
-  console.log({ cookies: Cookies.get("token") });
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   const {
     isLoading,
@@ -16,14 +14,21 @@ export const useAuthentication = (key?: any, retry?: number) => {
     queryKey: ["user", key],
     queryFn: () => getUser(),
     refetchInterval: retry,
+    enabled: isFirstRender, // Only run query on first render
   });
 
-  console.log({ user });
+  useEffect(() => {
+    // Set isFirstRender to false after first query completes
+    if (!isLoading && isFirstRender) {
+      setIsFirstRender(false);
+    }
+  }, [isLoading, isFirstRender]);
 
   return {
     isLoading,
     user,
     error,
     isAuthenticated: isSuccess,
+    isFirstRender,
   };
 };
