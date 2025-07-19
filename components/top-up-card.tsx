@@ -6,6 +6,7 @@ import {
   errorMessage,
   getDedicatedAccount,
   apiResponse,
+  sendWhatsAppMessage,
 } from "@/lib/utils";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
@@ -17,8 +18,6 @@ import { dedicatedAccountNumber } from "@/types";
 
 const TopUpCard = () => {
   const { user } = useAuthentication();
-
-  console.log({ user });
 
   const { isLoading, data: __data } = useQuery({
     queryKey: ["get-dedicated-account"],
@@ -41,7 +40,7 @@ const TopUpCard = () => {
 
   const sendVerificationCode = async () => {
     try {
-      await myApi.post(`/users/me/verify-account/`, { type: "email" });
+      await myApi.post(`/users/me/verify-account`, { type: "email" });
 
       toast.success("Verification code sent successfully");
     } catch (error) {
@@ -58,7 +57,7 @@ const TopUpCard = () => {
       <CardContent className="space-y-3">
         <Text className="font-semibold text-white/80">
           {account?.accountDetails.bankName.toUpperCase() ||
-            "USER ACCOUNT NOT VERIFIED"}
+            "ACCOUNT CREATION IN PROGRESS"}
         </Text>
         <div className="w-full flex items-center justify-between">
           <CardTitle className="text-4xl font-bold text-white">
@@ -73,8 +72,8 @@ const TopUpCard = () => {
             >
               Copy
             </Button>
-          ) : (
-            <VerifyEmail email={user?.auth?.email!}>
+          ) : !user?.isEmailVerified ? (
+            <VerifyEmail email={user?.auth.email}>
               <Button
                 onClick={sendVerificationCode}
                 className="rounded-sm bg-white/20 hover:bg-white/30"
@@ -82,10 +81,23 @@ const TopUpCard = () => {
                 VERIFY EMAIL
               </Button>
             </VerifyEmail>
+          ) : (
+            <Button
+              onClick={() =>
+                sendWhatsAppMessage(
+                  "2347040666904",
+                  `I want to fund my account, my userId is ${user._id?.toString()}`
+                )
+              }
+              className="rounded-sm bg-white/20 hover:bg-white/30"
+            >
+              MANUAL FUNDING
+            </Button>
           )}
         </div>
         <Text className="text-white/80">
-          {account?.accountDetails.accountName || "EMAIL NOT YET VERIFIED"}
+          {account?.accountDetails.accountName ||
+            "WE WILL SEND YOU AN EMAIL WHEN YOUR ACCOUNT IS READY"}
         </Text>
       </CardContent>
     </Card>

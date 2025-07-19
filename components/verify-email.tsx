@@ -97,12 +97,12 @@ const VerifyEmail: FC<{
     setError(null);
 
     try {
-      // Simulate myApi call to verify OTP
-      await myApi.get(`/users/me/verify-account/?otp=${otp}`);
+      await myApi.get(`/users/me/verify-account?otp=${otp}`);
 
       setIsVerified(true);
     } catch (error) {
       setError("An error occurred during verification. Please try again.");
+      toast.error(errorMessage(error).message);
     } finally {
       setIsVerifying(false);
     }
@@ -115,7 +115,7 @@ const VerifyEmail: FC<{
 
     try {
       // Simulate myApi call to resend OTP
-      await myApi.post(`/users/me/verify-account/`, { type: "email" });
+      await myApi.post(`/users/me/verify-account`, { type: "email" });
 
       toast.success("OTP resent successfully!");
 
@@ -126,6 +126,7 @@ const VerifyEmail: FC<{
       setCountdown(60);
     } catch (error) {
       setError(errorMessage(error).message);
+      toast.error(errorMessage(error).message);
     } finally {
       setIsResending(false);
     }

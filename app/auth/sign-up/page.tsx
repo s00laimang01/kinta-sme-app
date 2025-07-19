@@ -64,7 +64,7 @@ export default function SignUpPage() {
         );
 
         Cookies.set("token", data?.data?.token);
-        r.push(PATHS.HOME);
+        window.location.href = PATHS.HOME;
       } catch (error) {
         r.push(PATHS.SIGNIN);
       }
