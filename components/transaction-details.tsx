@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { myApi, cn } from "@/lib/utils";
+import { myApi, cn, apiResponse } from "@/lib/utils";
 import type {
   paymentMethod,
   transaction,
@@ -54,7 +54,7 @@ export function TransactionDetailsSheet({
     queryKey: ["transaction", tx_ref],
     queryFn: async () =>
       (
-        await myApi.get<{ data: transaction }>(
+        await myApi.get<apiResponse<transaction>>(
           `/transactions/get-transaction?tx_ref=${tx_ref}&useExpirationDate=false`
         )
       ).data,
