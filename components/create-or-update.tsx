@@ -69,6 +69,7 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
 
   const createTransactionPin = async (pin: string) => {
     try {
+      setLoading(true);
       const res = await myApi.post<{ message: string }>(`/auth/pin`, {
         pin,
         confirmPin,
@@ -77,11 +78,14 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
       toast(res.data.message);
     } catch (error) {
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   const changeTransactionPin = async () => {
     try {
+      setLoading(true);
       const res = await myApi.patch<{ message: string }>(`/auth/pin/update`, {
         newPin,
         oldPin: currentPin,
@@ -90,6 +94,8 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
       toast(res.data.message);
     } catch (error) {
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -279,7 +285,7 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
         )}
         <Button
           onClick={handleSetNewPin}
-          disabled={newPin.length !== 4}
+          disabled={newPin.length !== 4 || loading}
           className="rounded-none"
           variant="ringHover"
         >
@@ -313,7 +319,7 @@ const CreateOrUpdatePin: FC<CreateOrUpdatePinProps> = ({
         </Button>
         <Button
           onClick={handleConfirmPin}
-          disabled={confirmPin.length !== 4}
+          disabled={confirmPin.length !== 4 || loading}
           className="rounded-none"
           variant="ringHover"
         >
