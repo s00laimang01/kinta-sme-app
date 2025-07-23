@@ -1,0 +1,5 @@
+package com.kintasme.dataapp;
+
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {}

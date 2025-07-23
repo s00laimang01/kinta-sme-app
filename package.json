@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export"
+    "export": "next export",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "cap:build:android": "next build && npx cap sync android",
+    "playstore:build": "powershell -ExecutionPolicy Bypass -File .\\build-for-playstore.ps1"
   },
   "dependencies": {
     "@capacitor/android": "^7.3.0",
