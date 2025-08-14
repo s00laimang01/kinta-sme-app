@@ -32,6 +32,7 @@ const Page = () => {
   const { isLoading, data } = useQuery({
     queryKey: ["data-plans"],
     queryFn: () => myApi.get<{ data: dataPlan[] }>(`/create/data-plan`),
+    enabled: !!network
   });
 
   const { isLoading: _isLoading, data: recentlyUsed } = useQuery({
