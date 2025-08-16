@@ -34,7 +34,7 @@ const Page = () => {
       ).data.data,
   });
 
-  const LINK = `https://www.kinta-sem.com/auth/sign-up/?ref=${user?.phoneNumber}`;
+  const LINK = `https://www.kinta-sme.com/auth/sign-up/?ref=${user?.phoneNumber}`;
 
   const copyLink = (text = "") => {
     navigator.clipboard.writeText(text).then(() => {
