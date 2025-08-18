@@ -3,6 +3,7 @@ import { formatCurrency, getInitials, getNetworkLogo } from "@/lib/utils";
 import { dataPlan, transaction } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { configs } from "@/lib/constants";
 import { Skeleton } from "./ui/skeleton";
 import React from "react";
@@ -171,13 +172,13 @@ function TransactionReceipt(
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Account Number</span>
                 <span className="text-slate-950 font-mono">
-                  {transaction.meta.account_number || "Manual Funding"}
+                  {transaction.meta.account_number}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Account Name</span>
                 <span className="text-slate-950 text-right">
-                  {transaction.meta.account_name || "Manual Funding"}
+                  {transaction.meta.account_name}
                 </span>
               </div>
             </>
@@ -195,7 +196,9 @@ function TransactionReceipt(
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Recipient Mobile Number</span>
                 <span className="text-slate-950 font-mono">
-                  {Object.keys(transaction.meta.vendReport)[0]}
+                  {Object.keys(
+                    transaction.meta?.vendingResponse?.vendReport
+                  )?.[0] || "Not Founc"}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -208,7 +211,7 @@ function TransactionReceipt(
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">PayPoints Earned</span>
                   <span className="text-green-400 font-medium">
-                    + {transaction.meta.kintaSmePointsEarned}
+                    + {transaction.meta?.kintaSmePointsEarned || 0}
                   </span>
                 </div>
               )}
@@ -222,7 +225,9 @@ function TransactionReceipt(
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Payer Name</span>
                 <span className="text-slate-950">
-                  {transaction.meta?.payerName || session?.fullName}
+                  {transaction.meta?.payerName ||
+                    session?.fullName.split(" ")[0] ||
+                    "Unknown"}
                 </span>
               </div>
             </>
@@ -240,13 +245,18 @@ function TransactionReceipt(
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Recipient Mobile Number</span>
                 <span className="text-slate-950 font-mono">
-                  {Object.keys(transaction.meta?.vendReport)[0]}
+                  {transaction?.meta?.phoneNumber ||
+                    Object.keys(
+                      transaction.meta?.vendingResponse?.vendReport
+                    )[0]}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Account Name</span>
                 <span className="text-slate-950 text-right">
-                  {transaction.meta?.payerName || session?.fullName}
+                  {transaction.meta?.payerName ||
+                    session?.fullName.split(" ")[0] ||
+                    "Unknown"}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -264,7 +274,8 @@ function TransactionReceipt(
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Payment Item</span>
                 <span className="text-slate-950 text-right">
-                  {transaction.meta?.data || "Unknown"}
+                  {`${transaction.meta?.data} - ${transaction.meta?.availability}` ||
+                    "Unknown"}
                 </span>
               </div>
               {transaction.meta.completionTime && (
