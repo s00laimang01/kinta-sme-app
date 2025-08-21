@@ -7,13 +7,6 @@ import DataPlanCard from "@/components/data-plan-card";
 import PhoneNumberBadge from "@/components/phone-number-badge";
 import BalanceCard from "@/components/balance-card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useNavBar } from "@/hooks/use-nav-bar";
 import { AVIALABLE_NETWORKS, PLAN_TYPES } from "@/lib/constants";
 import type { availableNetworks, dataPlan } from "@/types";
@@ -21,6 +14,15 @@ import { useQuery } from "@tanstack/react-query";
 import { myApi, getRecentlyUsedContacts } from "@/lib/utils";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import Text from "@/components/text";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
   useNavBar("Buy Data");
@@ -32,7 +34,7 @@ const Page = () => {
   const { isLoading, data } = useQuery({
     queryKey: ["data-plans"],
     queryFn: () => myApi.get<{ data: dataPlan[] }>(`/create/data-plan`),
-    enabled: !!network
+    enabled: !!network,
   });
 
   const { isLoading: _isLoading, data: recentlyUsed } = useQuery({
@@ -124,49 +126,67 @@ const Page = () => {
               <span className="text-sm font-medium">Choose Plan:</span>
             </div>
 
-            <Select
-              value={(network as string) || ""}
-              onValueChange={(value: availableNetworks) => {
-                setNetwork(value);
-              }}
-            >
-              <SelectTrigger className="md:w-[180px] w-full rounded-none cmyApitalize">
-                <SelectValue
-                  placeholder="Select Network"
-                  className="cmyApitalize"
-                />
-              </SelectTrigger>
-              <SelectContent className="rounded-none">
-                <SelectItem value="all">All Networks</SelectItem>
-                {AVIALABLE_NETWORKS.map((type) => (
-                  <SelectItem key={type} value={type} className="cmyApitalize">
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="md:w-[180px] w-full rounded-none capitalize"
+                >
+                  {network || "Select Network"}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Select Network</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-3 w-full">
+                  {AVIALABLE_NETWORKS.map((ntw, idx) => (
+                    <DialogClose key={idx} asChild>
+                      <Button
+                        variant="outline"
+                        className="rounded-none w-full h-[3rem]"
+                        onClick={() => {
+                          setNetwork(ntw as availableNetworks);
+                        }}
+                      >
+                        {ntw.toUpperCase()}
+                      </Button>
+                    </DialogClose>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
 
-            <Select
-              value={planType}
-              onValueChange={(value) => {
-                setPlanType(value);
-              }}
-            >
-              <SelectTrigger className="md:w-[180px] w-full rounded-none cmyApitalize">
-                <SelectValue
-                  placeholder="Select Data Type"
-                  className="cmyApitalize"
-                />
-              </SelectTrigger>
-              <SelectContent className="rounded-none">
-                <SelectItem value="all">All Types</SelectItem>
-                {PLAN_TYPES.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="md:w-[180px] w-full rounded-none capitalize"
+                >
+                  {planType || "Select Plan Type"}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Select Plan Type</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-3 w-full">
+                  {PLAN_TYPES.map((plantype, idx) => (
+                    <DialogClose asChild key={idx}>
+                      <Button
+                        variant="outline"
+                        className="rounded-none w-full h-[3rem]"
+                        onClick={() => {
+                          setPlanType(plantype);
+                        }}
+                      >
+                        {plantype.toUpperCase()}
+                      </Button>
+                    </DialogClose>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="w-full h-px bg-gray-100 my-6" />
