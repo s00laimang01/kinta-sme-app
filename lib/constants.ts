@@ -3,7 +3,6 @@ import {
   meterType,
   PATHS,
   planTypes,
-  recentPurchaseNumbers,
   IBuyVtuNetworks,
 } from "@/types";
 import z from "zod";
