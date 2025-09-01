@@ -20,6 +20,7 @@ import { useAuthentication } from "@/hooks/use-authentication";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/types";
 import Cookies from "js-cookie";
+import { NotificationModal } from "./notification-modal";
 
 const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,6 +83,8 @@ const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-white w-screen relative">
       <Toaster position="top-center" richColors />
+      <NotificationModal />
+
       <Button
         size="sm"
         variant="ringHover"
