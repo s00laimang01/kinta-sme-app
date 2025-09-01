@@ -87,14 +87,33 @@ export interface ActionButtonProps {
 }
 
 // STORES
+// STORES
 export interface dashboardStore {
   // Getters
   title: string;
 
   // Setters
   setTitle: (title: string) => void;
-}
 
+  notification: {
+    open: boolean;
+    options?: {
+      type: transactionStatus;
+      title?: string;
+      description?: string;
+      tx_ref?: string;
+    };
+  };
+  setNotification: (
+    prop: boolean,
+    options?: {
+      type: transactionStatus;
+      title?: string;
+      description?: string;
+      tx_ref?: string;
+    }
+  ) => void;
+}
 export interface userStore {
   user: IUser | null;
   setUser: (user: IUser | null) => void;
@@ -183,7 +202,7 @@ export interface VirtualAccountData {
 
 // TRANSACTIONS
 
-export type transactionStatus = "success" | "failed" | "pending";
+export type transactionStatus = "success" | "failed" | "pending" | "refunded";
 export type transactionType =
   | "funding"
   | "airtime"
@@ -293,6 +312,8 @@ export interface appProps extends Document {
     expiredAt: string;
     url: string;
   };
+
+  disabledPlans: string[];
 
   // Methods
   isTransactionEnable: (transactionType?: transactionType) => Promise<void>;

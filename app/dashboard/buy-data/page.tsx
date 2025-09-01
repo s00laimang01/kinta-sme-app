@@ -9,7 +9,7 @@ import BalanceCard from "@/components/balance-card";
 import { Input } from "@/components/ui/input";
 import { useNavBar } from "@/hooks/use-nav-bar";
 import { AVIALABLE_NETWORKS, PLAN_TYPES } from "@/lib/constants";
-import type { availableNetworks, dataPlan } from "@/types";
+import type { appProps, availableNetworks, dataPlan } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { myApi, getRecentlyUsedContacts } from "@/lib/utils";
 import { useMediaQuery } from "@uidotdev/usehooks";
@@ -34,13 +34,22 @@ const Page = () => {
   const { isLoading, data } = useQuery({
     queryKey: ["data-plans"],
     queryFn: () => myApi.get<{ data: dataPlan[] }>(`/create/data-plan`),
-    enabled: !!network,
+    enabled: !!network && !!planType,
+  });
+
+  const { data: appSettingsData } = useQuery<{ data: { data: appProps } }>({
+    queryKey: ["app-settings"],
+    queryFn: () => myApi.get("/admin/settings"),
   });
 
   const { isLoading: _isLoading, data: recentlyUsed } = useQuery({
     queryKey: ["recently-used"],
     queryFn: () => getRecentlyUsedContacts("data", 3),
   });
+
+  const appSettings = appSettingsData?.data?.data;
+
+  const disablePlans = appSettings?.disabledPlans;
 
   const { data: _data } = data || {};
   const { data: dataPlans = [] } = _data || {};
@@ -171,19 +180,34 @@ const Page = () => {
                   <DialogTitle>Select Plan Type</DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col gap-3 w-full">
-                  {PLAN_TYPES.map((plantype, idx) => (
-                    <DialogClose asChild key={idx}>
-                      <Button
-                        variant="outline"
-                        className="rounded-none w-full h-[3rem]"
-                        onClick={() => {
-                          setPlanType(plantype);
-                        }}
-                      >
-                        {plantype.toUpperCase()}
-                      </Button>
-                    </DialogClose>
-                  ))}
+                  {PLAN_TYPES.map((plantype, idx) => {
+                    const c = disablePlans?.find((p) => {
+                      const [n, t] = p.split("-");
+
+                      return (
+                        n.toLowerCase() === network?.toLowerCase() &&
+                        t.toLowerCase() === plantype.toLowerCase()
+                      );
+                    });
+
+                    const cdp = c?.split("-");
+                    return (
+                      <DialogClose asChild key={idx}>
+                        <Button
+                          disabled={
+                            cdp?.[1].toLowerCase() === plantype.toLowerCase()
+                          }
+                          variant="outline"
+                          className="rounded-none w-full h-[3rem]"
+                          onClick={() => {
+                            setPlanType(plantype);
+                          }}
+                        >
+                          {plantype.toUpperCase()}
+                        </Button>
+                      </DialogClose>
+                    );
+                  })}
                 </div>
               </DialogContent>
             </Dialog>
